@@ -1,4 +1,4 @@
-import { FileText, Factory, Clock, Recycle } from 'lucide-react';
+import { FileText, Zap, Flame, Truck, Ship, Clock, Recycle } from 'lucide-react';
 import type { SectionId, ComponentIconId } from '../../types';
 import type { LucideIcon } from 'lucide-react';
 import { useTheme } from '../../hooks/useTheme';
@@ -18,7 +18,10 @@ interface SectionNavProps {
 }
 
 const LIFECYCLE_ICONS: Record<string, LucideIcon> = {
-  manufacturing: Factory,
+  'electricity': Zap,
+  'heat': Flame,
+  'transport-land': Truck,
+  'transport-overseas': Ship,
   'use-phase': Clock,
   'end-of-life': Recycle,
 };
@@ -42,7 +45,7 @@ export function SectionNav({ sections, activeSection, onSelect }: SectionNavProp
     if (section.group === 'product') {
       IconComponent = FileText;
     } else if (section.group === 'lifecycle') {
-      IconComponent = LIFECYCLE_ICONS[section.id] ?? Factory;
+      IconComponent = LIFECYCLE_ICONS[section.id] ?? Zap;
     } else if (section.icon) {
       IconComponent = COMPONENT_ICONS[section.icon]?.Icon ?? null;
     }

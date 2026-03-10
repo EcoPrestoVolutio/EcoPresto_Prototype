@@ -1,34 +1,37 @@
 import { useState, useCallback } from 'react';
-import type { Product, Variant, ComponentItem, Manufacturing, UsePhase, EndOfLife, ProductInfo } from '../types';
+import type { Product, Variant, ComponentItem, Manufacturing, UsePhase, EndOfLife, ProductInfo, VariantTransport } from '../types';
 
 let variantCounter = 100;
+
+const DEFAULT_CHAIN = { collectionRate: 1.0, recyclingRate: 0, cascadingRate: 0, lossRate: 1 };
 
 function createEmptyVariant(index: number): Variant {
   const id = `variant-${++variantCounter}`;
   return {
     id,
     name: `Variant ${index}`,
-    productInfo: { name: '', category: 'Infrastructure', variantName: `Variant ${index}`, totalWeight: 0, componentCount: 1 },
+    productInfo: { name: '', category: 'Infrastructure', variantName: `Variant ${index}`, sleeperType: 'concrete', totalWeight: 0, componentCount: 1 },
     components: [{
       id: `${id}-comp-1`,
       name: 'Component 1',
       icon: 'cube',
       materialId: 'cement_unspecified',
       mass: 0,
-      primaryMaterialContent: 1.0,
-      productionLoss: 0,
-      productionLossTreatment: { recyclingWithoutLoss: 0, recyclingWithLoss: 0, disposal: 1 },
-      transport: { distance: 0, modes: [{ modeId: 'trans_lorry', share: 1.0 }] },
+      primaryContent: 1.0,
+      manufacturingLossRate: 0,
+      manufacturingLossTreatment: DEFAULT_CHAIN,
+      eolTreatment: DEFAULT_CHAIN,
     }],
     manufacturing: {
       electricity: { consumption: 0, mixId: 'ch_grid_basic' },
       heat: { consumption: 0, mixId: 'heat_basic' },
     },
+    transportLand: { distance: 0, mixId: 'basic_land' },
+    transportOverseas: { distance: 0, mixId: 'basic_overseas' },
     usePhase: { lifetime: 30 },
     endOfLife: {
       scenario: 'recycling',
       transport: { distance: 0, modes: [{ modeId: 'trans_lorry', share: 1.0 }] },
-      materialRecycling: [],
     },
   };
 }
@@ -69,6 +72,14 @@ export function useVariants(initialProduct: Product) {
         heat: updates.heat ?? v.manufacturing.heat,
       },
     }));
+  }, [updateActiveVariant]);
+
+  const updateTransportLand = useCallback((updates: Partial<VariantTransport>) => {
+    updateActiveVariant(v => ({ ...v, transportLand: { ...v.transportLand, ...updates } }));
+  }, [updateActiveVariant]);
+
+  const updateTransportOverseas = useCallback((updates: Partial<VariantTransport>) => {
+    updateActiveVariant(v => ({ ...v, transportOverseas: { ...v.transportOverseas, ...updates } }));
   }, [updateActiveVariant]);
 
   const updateUsePhase = useCallback((updates: Partial<UsePhase>) => {
@@ -127,10 +138,10 @@ export function useVariants(initialProduct: Product) {
             icon: 'cube',
             materialId: 'cement_unspecified',
             mass: 0,
-            primaryMaterialContent: 1.0,
-            productionLoss: 0,
-            productionLossTreatment: { recyclingWithoutLoss: 0, recyclingWithLoss: 0, disposal: 1 },
-            transport: { distance: 0, modes: [{ modeId: 'trans_lorry', share: 1.0 }] },
+            primaryContent: 1.0,
+            manufacturingLossRate: 0,
+            manufacturingLossTreatment: DEFAULT_CHAIN,
+            eolTreatment: DEFAULT_CHAIN,
           });
         }
         return {
@@ -148,6 +159,18 @@ export function useVariants(initialProduct: Product) {
     });
   }, [updateActiveVariant]);
 
+  const setSleeperComponents = useCallback((components: Omit<ComponentItem, 'id'>[], variantId: string) => {
+    updateVariant(variantId, v => ({
+      ...v,
+      components: components.map((c, i) => ({ ...c, id: `${v.id}-comp-${i + 1}` })),
+      productInfo: {
+        ...v.productInfo,
+        componentCount: components.length,
+        totalWeight: components.reduce((sum, c) => sum + c.mass, 0),
+      },
+    }));
+  }, [updateVariant]);
+
   return {
     product,
     activeVariant,
@@ -156,6 +179,8 @@ export function useVariants(initialProduct: Product) {
     updateProductInfo,
     updateComponent,
     updateManufacturing,
+    updateTransportLand,
+    updateTransportOverseas,
     updateUsePhase,
     updateEndOfLife,
     addVariant,
@@ -163,5 +188,6 @@ export function useVariants(initialProduct: Product) {
     duplicateVariant,
     renameVariant,
     setComponentCount,
+    setSleeperComponents,
   };
 }

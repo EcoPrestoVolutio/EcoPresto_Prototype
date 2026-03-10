@@ -6,12 +6,19 @@ interface SankeyDiagramProps {
   components: {
     name: string;
     mass: number;
-    primaryMaterialContent: number;
-    productionLoss: number;
-    productionLossTreatment: {
-      recyclingWithoutLoss: number;
-      recyclingWithLoss: number;
-      disposal: number;
+    primaryContent: number;
+    manufacturingLossRate: number;
+    manufacturingLossTreatment: {
+      collectionRate: number;
+      recyclingRate: number;
+      cascadingRate: number;
+      lossRate: number;
+    };
+    eolTreatment: {
+      collectionRate: number;
+      recyclingRate: number;
+      cascadingRate: number;
+      lossRate: number;
     };
   }[];
   totalWeight: number;
@@ -39,12 +46,16 @@ export function SankeyDiagram({ components, totalWeight }: SankeyDiagramProps) {
     let totalLoss = 0;
 
     for (const c of components) {
-      const massWithLoss = c.mass * (1 + c.productionLoss);
-      totalPrimary += c.mass * c.primaryMaterialContent * (1 + c.productionLoss);
-      totalSecondary += c.mass * (1 - c.primaryMaterialContent) * (1 + c.productionLoss);
-      totalRecycled += massWithLoss * c.productionLossTreatment.recyclingWithoutLoss;
-      totalCascaded += massWithLoss * c.productionLossTreatment.recyclingWithLoss;
-      totalLoss += massWithLoss * c.productionLossTreatment.disposal;
+      const massRequired = c.mass * (1 + c.manufacturingLossRate);
+      const manufLossKg = c.mass * c.manufacturingLossRate;
+      totalPrimary += massRequired * c.primaryContent;
+      totalSecondary += massRequired * (1 - c.primaryContent);
+
+      const m = c.manufacturingLossTreatment;
+      const e = c.eolTreatment;
+      totalRecycled += manufLossKg * m.collectionRate * m.recyclingRate + c.mass * e.collectionRate * e.recyclingRate;
+      totalCascaded += manufLossKg * m.collectionRate * m.cascadingRate + c.mass * e.collectionRate * e.cascadingRate;
+      totalLoss += manufLossKg * m.collectionRate * m.lossRate + c.mass * e.collectionRate * e.lossRate;
     }
 
     return { totalPrimary, totalSecondary, totalRecycled, totalCascaded, totalLoss };

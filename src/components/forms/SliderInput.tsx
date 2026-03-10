@@ -51,7 +51,7 @@ export function SliderInput({
             >
               <Info className="h-3.5 w-3.5 text-gray-400 cursor-help" />
               {showTooltip && (
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs text-white bg-gray-800 rounded shadow-lg whitespace-nowrap z-50 max-w-xs">
+                <div className="absolute bottom-full left-0 mb-2 px-3 py-2 text-xs text-white bg-gray-800 rounded shadow-lg z-50 w-56">
                   {tooltip}
                 </div>
               )}

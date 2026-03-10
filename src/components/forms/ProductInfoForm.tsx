@@ -1,11 +1,15 @@
 import { NumberInput } from './NumberInput';
 import { SelectInput } from './SelectInput';
-import type { ProductInfo } from '../../types';
+import type { ProductInfo, SleeperType } from '../../types';
+import { SLEEPER_TYPE_OPTIONS } from '../../data/sleeperTypes';
 
 interface ProductInfoFormProps {
   productInfo: ProductInfo;
+  lifetime: number;
   onUpdate: (info: Partial<ProductInfo>) => void;
+  onLifetimeChange: (lifetime: number) => void;
   onComponentCountChange: (count: number) => void;
+  onSleeperTypeChange: (sleeperType: SleeperType) => void;
 }
 
 const CATEGORY_OPTIONS = [
@@ -19,13 +23,23 @@ const CATEGORY_OPTIONS = [
 
 export function ProductInfoForm({
   productInfo,
+  lifetime,
   onUpdate,
+  onLifetimeChange,
   onComponentCountChange,
+  onSleeperTypeChange,
 }: ProductInfoFormProps) {
+
   const handleComponentCountChange = (count: number) => {
     const rounded = Math.round(count);
     onUpdate({ componentCount: rounded });
     onComponentCountChange(rounded);
+  };
+
+  const handleSleeperTypeChange = (value: string) => {
+    const st = value as SleeperType;
+    onUpdate({ sleeperType: st });
+    onSleeperTypeChange(st);
   };
 
   return (
@@ -36,9 +50,7 @@ export function ProductInfoForm({
 
       <div className="space-y-3">
         <div className="py-1.5">
-          <label className="block text-sm text-gray-700 mb-1">
-            Product Name
-          </label>
+          <label className="block text-sm text-gray-700 mb-1">Product Name</label>
           <input
             type="text"
             value={productInfo.name}
@@ -56,17 +68,31 @@ export function ProductInfoForm({
           options={CATEGORY_OPTIONS}
         />
 
+        <SelectInput
+          label="Sleeper Type"
+          value={productInfo.sleeperType}
+          onChange={handleSleeperTypeChange}
+          options={SLEEPER_TYPE_OPTIONS}
+        />
+
+        <NumberInput
+          label="Lifetime"
+          value={lifetime}
+          onChange={onLifetimeChange}
+          unit="years"
+          min={1}
+          max={100}
+          step={1}
+          tooltip="Product service life. Auto-set from sleeper type. τ is inversely proportional to lifetime."
+        />
+
         <div className="py-1.5">
-          <label className="block text-sm text-gray-700 mb-1">
-            Variant Name
-          </label>
+          <label className="block text-sm text-gray-700 mb-1">Variant Name</label>
           <input
             type="text"
             value={productInfo.variantName}
             onChange={(e) => onUpdate({ variantName: e.target.value })}
-            onBlur={() =>
-              onUpdate({ variantName: productInfo.variantName.trim() })
-            }
+            onBlur={() => onUpdate({ variantName: productInfo.variantName.trim() })}
             placeholder="e.g. V1-Concrete"
             className="w-full px-3 py-1.5 text-sm text-gray-900 border border-gray-300 rounded bg-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
           />
@@ -91,6 +117,14 @@ export function ProductInfoForm({
           step={1}
           tooltip="Number of different material components (max. 10)"
         />
+
+        <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+          <p className="text-xs text-gray-500">
+            Changing the sleeper type will reset components to the default configuration
+            for that type. Energy and transport mix profiles can be configured on the
+            Materials & Energy page.
+          </p>
+        </div>
       </div>
     </div>
   );

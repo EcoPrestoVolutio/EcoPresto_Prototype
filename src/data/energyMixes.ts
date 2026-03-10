@@ -6,12 +6,12 @@ export const energyMixes: EnergyMix[] = [
     name: 'CH Grid Basic',
     type: 'electricity',
     sources: [
-      { erpId: 'el_coal', share: 0.05 },
-      { erpId: 'el_gas', share: 0.15 },
-      { erpId: 'el_nuclear', share: 0.35 },
-      { erpId: 'el_hydro', share: 0.30 },
-      { erpId: 'el_wind_on', share: 0.10 },
-      { erpId: 'el_pv_roof', share: 0.05 },
+      { erpId: 'el_gas', share: 0.019 },
+      { erpId: 'el_nuclear', share: 0.289 },
+      { erpId: 'el_wind_on', share: 0.01 },
+      { erpId: 'el_wood', share: 0.02 },
+      { erpId: 'el_hydro', share: 0.6435 },
+      { erpId: 'el_pv_roof', share: 0.0185 },
     ],
   },
   {
@@ -19,10 +19,10 @@ export const energyMixes: EnergyMix[] = [
     name: 'CH Grid Green',
     type: 'electricity',
     sources: [
-      { erpId: 'el_nuclear', share: 0.10 },
-      { erpId: 'el_hydro', share: 0.50 },
-      { erpId: 'el_wind_on', share: 0.25 },
-      { erpId: 'el_pv_roof', share: 0.15 },
+      { erpId: 'el_wind_on', share: 0.10 },
+      { erpId: 'el_wood', share: 0.02 },
+      { erpId: 'el_hydro', share: 0.38 },
+      { erpId: 'el_pv_roof', share: 0.50 },
     ],
   },
   {
@@ -40,10 +40,8 @@ export const energyMixes: EnergyMix[] = [
     name: 'Heat Basic',
     type: 'heat',
     sources: [
-      { erpId: 'ht_gas', share: 0.70 },
-      { erpId: 'ht_oil', share: 0.20 },
-      { erpId: 'ht_wood', share: 0.05 },
-      { erpId: 'ht_solar', share: 0.05 },
+      { erpId: 'ht_gas', share: 0.50 },
+      { erpId: 'ht_oil', share: 0.50 },
     ],
   },
   {
@@ -51,18 +49,8 @@ export const energyMixes: EnergyMix[] = [
     name: 'Heat Green',
     type: 'heat',
     sources: [
-      { erpId: 'ht_gas', share: 0.20 },
-      { erpId: 'ht_wood', share: 0.40 },
-      { erpId: 'ht_solar', share: 0.40 },
-    ],
-  },
-  {
-    id: 'heat_pump_solar',
-    name: 'Heat Pump + Solar',
-    type: 'heat',
-    sources: [
-      { erpId: 'ht_heatpump', share: 0.50 },
       { erpId: 'ht_solar', share: 0.50 },
+      { erpId: 'ht_heatpump', share: 0.50 },
     ],
   },
 ];

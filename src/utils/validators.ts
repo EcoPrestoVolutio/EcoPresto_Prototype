@@ -15,10 +15,10 @@ export function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
-export function validateLossTreatment(
-  recyclingWithoutLoss: number,
-  recyclingWithLoss: number,
-): { valid: boolean; disposal: number } {
-  const total = recyclingWithoutLoss + recyclingWithLoss;
-  return { valid: total <= 1.0, disposal: Math.max(0, 1 - total) };
+export function validateRecyclingChain(
+  recyclingRate: number,
+  cascadingRate: number,
+): { valid: boolean; lossRate: number } {
+  const total = recyclingRate + cascadingRate;
+  return { valid: total <= 1.0, lossRate: Math.max(0, 1 - total) };
 }

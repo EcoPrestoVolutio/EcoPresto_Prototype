@@ -1,34 +1,32 @@
 import { useRef, useCallback, useEffect, useState } from 'react';
 
 interface ThreeSegmentSliderProps {
-  recyclingWithoutLoss: number;
-  recyclingWithLoss: number;
-  disposal: number;
-  onChange: (values: {
-    recyclingWithoutLoss: number;
-    recyclingWithLoss: number;
-    disposal: number;
-  }) => void;
+  recycling: number;
+  cascading: number;
+  loss: number;
+  onChange: (values: { recycling: number; cascading: number; loss: number }) => void;
+  title?: string;
 }
 
 const COLORS = {
-  recyclingWithoutLoss: '#3B82F6',
-  recyclingWithLoss: '#F59E0B',
-  disposal: '#EF4444',
+  recycling: '#3B82F6',
+  cascading: '#F59E0B',
+  loss: '#EF4444',
 };
 
 export function ThreeSegmentSlider({
-  recyclingWithoutLoss,
-  recyclingWithLoss,
-  disposal,
+  recycling,
+  cascading,
+  loss,
   onChange,
+  title,
 }: ThreeSegmentSliderProps) {
   const barRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState<'left' | 'right' | null>(null);
 
-  const pctA = Math.round(recyclingWithoutLoss * 100);
-  const pctB = Math.round(recyclingWithLoss * 100);
-  const pctC = Math.round(disposal * 100);
+  const pctA = Math.round(recycling * 100);
+  const pctB = Math.round(cascading * 100);
+  const pctC = Math.round(loss * 100);
 
   const positionToValue = useCallback((clientX: number): number => {
     if (!barRef.current) return 0;
@@ -49,25 +47,24 @@ export function ThreeSegmentSlider({
     const snapped = Math.round(pos / step) * step;
 
     if (dragging === 'left') {
-      const maxLeft = recyclingWithoutLoss + recyclingWithLoss;
+      const maxLeft = recycling + cascading;
       const newA = Math.max(0, Math.min(snapped, maxLeft));
       const newB = maxLeft - newA;
       onChange({
-        recyclingWithoutLoss: newA,
-        recyclingWithLoss: newB,
-        disposal: Math.max(0, 1 - newA - newB),
+        recycling: newA,
+        cascading: newB,
+        loss: Math.max(0, 1 - newA - newB),
       });
     } else {
-      const boundary = recyclingWithoutLoss + recyclingWithLoss;
-      const newBoundary = Math.max(recyclingWithoutLoss, Math.min(snapped, 1));
-      const newB = newBoundary - recyclingWithoutLoss;
+      const newBoundary = Math.max(recycling, Math.min(snapped, 1));
+      const newB = newBoundary - recycling;
       onChange({
-        recyclingWithoutLoss,
-        recyclingWithLoss: Math.max(0, newB),
-        disposal: Math.max(0, 1 - newBoundary),
+        recycling,
+        cascading: Math.max(0, newB),
+        loss: Math.max(0, 1 - newBoundary),
       });
     }
-  }, [dragging, recyclingWithoutLoss, recyclingWithLoss, positionToValue, onChange]);
+  }, [dragging, recycling, cascading, positionToValue, onChange]);
 
   const handlePointerUp = useCallback(() => {
     setDragging(null);
@@ -80,90 +77,84 @@ export function ThreeSegmentSlider({
     return () => window.removeEventListener('pointerup', onUp);
   }, [dragging]);
 
-  const leftHandlePos = recyclingWithoutLoss * 100;
-  const rightHandlePos = (recyclingWithoutLoss + recyclingWithLoss) * 100;
+  const leftHandlePos = recycling * 100;
+  const rightHandlePos = (recycling + cascading) * 100;
 
   return (
-    <div className="py-2">
-      <div className="text-sm font-medium text-gray-700 mb-3">
-        Production Loss Treatment
-      </div>
+    <div className="py-1">
+      {title && (
+        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+          {title}
+        </div>
+      )}
 
       <div
         ref={barRef}
-        className="relative h-10 rounded-lg overflow-visible select-none"
+        className="relative h-8 rounded-lg overflow-visible select-none"
         style={{ touchAction: 'none' }}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
       >
-        {/* Colored segments */}
         <div className="absolute inset-0 flex rounded-lg overflow-hidden">
           <div
-            className="h-full flex items-center justify-center text-xs font-medium text-white transition-[width] duration-75"
-            style={{ width: `${pctA}%`, backgroundColor: COLORS.recyclingWithoutLoss }}
+            className="h-full flex items-center justify-center text-[11px] font-medium text-white transition-[width] duration-75"
+            style={{ width: `${pctA}%`, backgroundColor: COLORS.recycling }}
           >
-            {pctA > 12 && `${pctA}%`}
+            {pctA > 10 && `${pctA}%`}
           </div>
           <div
-            className="h-full flex items-center justify-center text-xs font-medium text-white transition-[width] duration-75"
-            style={{ width: `${pctB}%`, backgroundColor: COLORS.recyclingWithLoss }}
+            className="h-full flex items-center justify-center text-[11px] font-medium text-white transition-[width] duration-75"
+            style={{ width: `${pctB}%`, backgroundColor: COLORS.cascading }}
           >
-            {pctB > 12 && `${pctB}%`}
+            {pctB > 10 && `${pctB}%`}
           </div>
           <div
-            className="h-full flex items-center justify-center text-xs font-medium text-white transition-[width] duration-75"
-            style={{ width: `${pctC}%`, backgroundColor: COLORS.disposal }}
+            className="h-full flex items-center justify-center text-[11px] font-medium text-white transition-[width] duration-75"
+            style={{ width: `${pctC}%`, backgroundColor: COLORS.loss }}
           >
-            {pctC > 12 && `${pctC}%`}
+            {pctC > 10 && `${pctC}%`}
           </div>
         </div>
 
-        {/* Left handle */}
-        {leftHandlePos > 0 && leftHandlePos < 100 && (
-          <div
-            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 z-10"
-            style={{ left: `${leftHandlePos}%` }}
-            onPointerDown={handlePointerDown('left')}
-          >
-            <div className={`w-5 h-12 rounded-md bg-white border-2 shadow-md cursor-ew-resize flex items-center justify-center ${dragging === 'left' ? 'border-blue-600 shadow-lg scale-110' : 'border-gray-400 hover:border-blue-500'} transition-all`}>
-              <div className="flex gap-px">
-                <div className="w-px h-4 bg-gray-400" />
-                <div className="w-px h-4 bg-gray-400" />
-              </div>
+        <div
+          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 z-10"
+          style={{ left: `${leftHandlePos}%` }}
+          onPointerDown={handlePointerDown('left')}
+        >
+          <div className={`w-4 h-10 rounded bg-white border-2 shadow-md cursor-ew-resize flex items-center justify-center ${dragging === 'left' ? 'border-blue-600 shadow-lg scale-110' : 'border-gray-400 hover:border-blue-500'} transition-all`}>
+            <div className="flex gap-px">
+              <div className="w-px h-3 bg-gray-400" />
+              <div className="w-px h-3 bg-gray-400" />
             </div>
           </div>
-        )}
+        </div>
 
-        {/* Right handle */}
-        {rightHandlePos > 0 && rightHandlePos < 100 && (
-          <div
-            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 z-10"
-            style={{ left: `${rightHandlePos}%` }}
-            onPointerDown={handlePointerDown('right')}
-          >
-            <div className={`w-5 h-12 rounded-md bg-white border-2 shadow-md cursor-ew-resize flex items-center justify-center ${dragging === 'right' ? 'border-amber-600 shadow-lg scale-110' : 'border-gray-400 hover:border-amber-500'} transition-all`}>
-              <div className="flex gap-px">
-                <div className="w-px h-4 bg-gray-400" />
-                <div className="w-px h-4 bg-gray-400" />
-              </div>
+        <div
+          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 z-10"
+          style={{ left: `${rightHandlePos}%` }}
+          onPointerDown={handlePointerDown('right')}
+        >
+          <div className={`w-4 h-10 rounded bg-white border-2 shadow-md cursor-ew-resize flex items-center justify-center ${dragging === 'right' ? 'border-amber-600 shadow-lg scale-110' : 'border-gray-400 hover:border-amber-500'} transition-all`}>
+            <div className="flex gap-px">
+              <div className="w-px h-3 bg-gray-400" />
+              <div className="w-px h-3 bg-gray-400" />
             </div>
           </div>
-        )}
+        </div>
       </div>
 
-      {/* Legend */}
-      <div className="flex gap-4 text-xs text-gray-500 mt-3">
-        <div className="flex items-center gap-1.5">
-          <span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: COLORS.recyclingWithoutLoss }} />
-          Recycling w/o loss
+      <div className="flex gap-3 text-[11px] text-gray-500 mt-2">
+        <div className="flex items-center gap-1">
+          <span className="inline-block w-2 h-2 rounded-sm" style={{ backgroundColor: COLORS.recycling }} />
+          Recycling
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: COLORS.recyclingWithLoss }} />
-          Recycling w/ loss
+        <div className="flex items-center gap-1">
+          <span className="inline-block w-2 h-2 rounded-sm" style={{ backgroundColor: COLORS.cascading }} />
+          Cascading
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: COLORS.disposal }} />
-          Disposal
+        <div className="flex items-center gap-1">
+          <span className="inline-block w-2 h-2 rounded-sm" style={{ backgroundColor: COLORS.loss }} />
+          Loss
         </div>
       </div>
     </div>

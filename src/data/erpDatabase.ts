@@ -1,32 +1,33 @@
 import type { ERPEntry } from '../types';
 
 export const erpDatabase: ERPEntry[] = [
-  // Electricity sources
-  { id: 'el_coal', name: 'Electricity, coal', category: 'electricity', unit: 'kWh', erp: 7.57e11, limitingBoundary: 'CO2' },
-  { id: 'el_gas', name: 'Electricity, gas', category: 'electricity', unit: 'kWh', erp: 1.42e12, limitingBoundary: 'CO2' },
-  { id: 'el_nuclear', name: 'Electricity, nuclear', category: 'electricity', unit: 'kWh', erp: 7.03e12, limitingBoundary: 'CO2' },
-  { id: 'el_hydro', name: 'Electricity, hydro', category: 'electricity', unit: 'kWh', erp: 3.67e12, limitingBoundary: 'biophysical' },
+  // Electricity sources (ERP values from SOB Excel workbook)
+  { id: 'el_coal', name: 'Electricity, coal', category: 'electricity', unit: 'kWh', erp: 7.568e11, limitingBoundary: 'CO2' },
+  { id: 'el_oil', name: 'Electricity, oil', category: 'electricity', unit: 'kWh', erp: 8.802e11, limitingBoundary: 'CO2' },
+  { id: 'el_gas', name: 'Electricity, gas', category: 'electricity', unit: 'kWh', erp: 1.421e12, limitingBoundary: 'CO2' },
+  { id: 'el_nuclear', name: 'Electricity, nuclear', category: 'electricity', unit: 'kWh', erp: 7.031e12, limitingBoundary: 'CO2' },
   { id: 'el_wind_on', name: 'Electricity, wind onshore', category: 'electricity', unit: 'kWh', erp: 1.13e12, limitingBoundary: 'biophysical' },
-  { id: 'el_wind_off', name: 'Electricity, wind offshore', category: 'electricity', unit: 'kWh', erp: 8.45e11, limitingBoundary: 'biophysical' },
-  { id: 'el_pv_roof', name: 'Electricity, PV rooftop', category: 'electricity', unit: 'kWh', erp: 2.81e13, limitingBoundary: 'CO2' },
-  { id: 'el_pv_desert', name: 'Electricity, PV desert', category: 'electricity', unit: 'kWh', erp: 4.12e13, limitingBoundary: 'CO2' },
-  { id: 'el_geothermal', name: 'Electricity, geothermal', category: 'electricity', unit: 'kWh', erp: 5.21e12, limitingBoundary: 'CO2' },
-  { id: 'el_wood', name: 'Electricity, wood biomass', category: 'electricity', unit: 'kWh', erp: 2.34e12, limitingBoundary: 'biophysical' },
+  { id: 'el_wind_off', name: 'Electricity, wind offshore', category: 'electricity', unit: 'kWh', erp: 9.84e11, limitingBoundary: 'biophysical' },
+  { id: 'el_geo', name: 'Electricity, geothermal', category: 'electricity', unit: 'kWh', erp: 2.548e12, limitingBoundary: 'CO2' },
+  { id: 'el_wood', name: 'Electricity, wood biomass', category: 'electricity', unit: 'kWh', erp: 1.12e12, limitingBoundary: 'biophysical' },
+  { id: 'el_hydro', name: 'Electricity, hydro', category: 'electricity', unit: 'kWh', erp: 3.669e12, limitingBoundary: 'biophysical' },
+  { id: 'el_pv_desert', name: 'Electricity, PV desert', category: 'electricity', unit: 'kWh', erp: 2.024e13, limitingBoundary: 'CO2' },
+  { id: 'el_pv_roof', name: 'Electricity, PV rooftop', category: 'electricity', unit: 'kWh', erp: 2.811e13, limitingBoundary: 'CO2' },
 
   // Heat sources
-  { id: 'ht_gas', name: 'Heat, natural gas', category: 'heat', unit: 'kWh', erp: 6.02e13, limitingBoundary: 'CO2' },
-  { id: 'ht_propane', name: 'Heat, propane', category: 'heat', unit: 'kWh', erp: 4.81e13, limitingBoundary: 'CO2' },
-  { id: 'ht_oil', name: 'Heat, oil', category: 'heat', unit: 'kWh', erp: 3.25e13, limitingBoundary: 'CO2' },
+  { id: 'ht_gas', name: 'Heat, natural gas', category: 'heat', unit: 'kWh', erp: 6.015e13, limitingBoundary: 'CO2' },
+  { id: 'ht_propane', name: 'Heat, propane', category: 'heat', unit: 'kWh', erp: 3.551e13, limitingBoundary: 'CO2' },
+  { id: 'ht_oil', name: 'Heat, oil', category: 'heat', unit: 'kWh', erp: 3.306e13, limitingBoundary: 'CO2' },
   { id: 'ht_wood', name: 'Heat, wood', category: 'heat', unit: 'kWh', erp: 4.48e12, limitingBoundary: 'biophysical' },
-  { id: 'ht_solar', name: 'Heat, solar thermal', category: 'heat', unit: 'kWh', erp: 8.38e14, limitingBoundary: 'biophysical' },
-  { id: 'ht_heatpump', name: 'Heat, heat pump', category: 'heat', unit: 'kWh', erp: 1.5e14, limitingBoundary: 'CO2' },
+  { id: 'ht_solar', name: 'Heat, solar thermal', category: 'heat', unit: 'kWh', erp: 8.381e14, limitingBoundary: 'biophysical' },
+  { id: 'ht_heatpump', name: 'Heat, heat pump', category: 'heat', unit: 'kWh', erp: 0, limitingBoundary: 'CO2' },
 
   // Transport modes
-  { id: 'trans_train_diesel', name: 'Freight train, diesel', category: 'transport', unit: 'tkm', erp: 4.82e13, limitingBoundary: 'CO2' },
-  { id: 'trans_train_electric', name: 'Freight train, electric', category: 'transport', unit: 'tkm', erp: 6.97e13, limitingBoundary: 'CO2' },
-  { id: 'trans_lorry', name: 'Transport, lorry', category: 'transport', unit: 'tkm', erp: 3.44e12, limitingBoundary: 'CO2' },
-  { id: 'trans_sea', name: 'Transport, sea', category: 'transport', unit: 'tkm', erp: 9.07e13, limitingBoundary: 'CO2' },
-  { id: 'trans_air', name: 'Transport, air freight', category: 'transport', unit: 'tkm', erp: 2.15e11, limitingBoundary: 'CO2' },
+  { id: 'trans_train_diesel', name: 'Freight train, diesel', category: 'transport', unit: 'tkm', erp: 1.833e13, limitingBoundary: 'CO2' },
+  { id: 'trans_train_electric', name: 'Freight train, electric', category: 'transport', unit: 'tkm', erp: 6.965e13, limitingBoundary: 'CO2' },
+  { id: 'trans_lorry', name: 'Transport, lorry', category: 'transport', unit: 'tkm', erp: 3.443e12, limitingBoundary: 'CO2' },
+  { id: 'trans_sea', name: 'Transport, sea', category: 'transport', unit: 'tkm', erp: 9.070e13, limitingBoundary: 'CO2' },
+  { id: 'trans_air', name: 'Transport, air freight', category: 'transport', unit: 'tkm', erp: 9.611e11, limitingBoundary: 'CO2' },
 
   // Materials
   { id: 'cement_unspecified', name: 'Cement, unspecified', category: 'material', unit: 'kg', erp: 1.32e12, limitingBoundary: 'CO2' },

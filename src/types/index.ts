@@ -1,3 +1,7 @@
+export type PageId = 'overview' | 'materials-energy' | 'variant-config';
+
+export type SleeperType = 'concrete' | 'wood' | 'sicut';
+
 export interface Product {
   id: string;
   name: string;
@@ -11,15 +15,23 @@ export interface Variant {
   productInfo: ProductInfo;
   components: ComponentItem[];
   manufacturing: Manufacturing;
+  transportLand: VariantTransport;
+  transportOverseas: VariantTransport;
   usePhase: UsePhase;
   endOfLife: EndOfLife;
   results?: CalculationResult;
+}
+
+export interface VariantTransport {
+  distance: number;
+  mixId: string;
 }
 
 export interface ProductInfo {
   name: string;
   category: string;
   variantName: string;
+  sleeperType: SleeperType;
   totalWeight: number;
   componentCount: number;
 }
@@ -44,26 +56,17 @@ export interface ComponentItem {
   icon: ComponentIconId;
   materialId: string;
   mass: number;
-  primaryMaterialContent: number;
-  productionLoss: number;
-  productionLossTreatment: LossTreatment;
-  transport: TransportConfig;
+  primaryContent: number;
+  manufacturingLossRate: number;
+  manufacturingLossTreatment: RecyclingChain;
+  eolTreatment: RecyclingChain;
 }
 
-export interface LossTreatment {
-  recyclingWithoutLoss: number;
-  recyclingWithLoss: number;
-  disposal: number;
-}
-
-export interface TransportConfig {
-  distance: number;
-  modes: TransportModeEntry[];
-}
-
-export interface TransportModeEntry {
-  modeId: string;
-  share: number;
+export interface RecyclingChain {
+  collectionRate: number;
+  recyclingRate: number;
+  cascadingRate: number;
+  lossRate: number;
 }
 
 export interface Manufacturing {
@@ -76,6 +79,16 @@ export interface EnergyInput {
   mixId: string;
 }
 
+export interface TransportConfig {
+  distance: number;
+  modes: TransportModeEntry[];
+}
+
+export interface TransportModeEntry {
+  modeId: string;
+  share: number;
+}
+
 export interface UsePhase {
   lifetime: number;
 }
@@ -83,14 +96,6 @@ export interface UsePhase {
 export interface EndOfLife {
   scenario: 'recycling' | 'cascading' | 'disposal';
   transport: TransportConfig;
-  materialRecycling: MaterialRecyclingEntry[];
-}
-
-export interface MaterialRecyclingEntry {
-  componentId: string;
-  recyclingWithoutLoss: number;
-  recyclingWithLoss: number;
-  disposal: number;
 }
 
 export interface ERPEntry {
@@ -114,10 +119,25 @@ export interface EnergySource {
   share: number;
 }
 
+export interface TransportMix {
+  id: string;
+  name: string;
+  type: 'land' | 'overseas';
+  modes: TransportModeEntry[];
+}
+
 export interface TransportModeDefinition {
   id: string;
   name: string;
   erpId: string;
+}
+
+export interface MaterialEnergyRates {
+  materialId: string;
+  electricityManufRate: number;
+  electricityRecycleRate: number;
+  heatManufRate: number;
+  heatRecycleRate: number;
 }
 
 export interface CalculationResult {
@@ -137,6 +157,7 @@ export interface TauBreakdown {
 export type SectionId =
   | 'product-info'
   | `component-${number}`
-  | 'manufacturing'
-  | 'use-phase'
-  | 'end-of-life';
+  | 'electricity'
+  | 'heat'
+  | 'transport-land'
+  | 'transport-overseas';

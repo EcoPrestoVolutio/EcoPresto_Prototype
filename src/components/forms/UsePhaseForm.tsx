@@ -22,7 +22,7 @@ export function UsePhaseForm({ usePhase, onUpdate }: UsePhaseFormProps) {
           min={1}
           max={100}
           step={1}
-          onBlur={(value) => onUpdate({ lifetime: value })}
+          onChange={(value) => onUpdate({ lifetime: value })}
         />
 
         <div className="flex gap-3 rounded-lg bg-blue-50 p-4">

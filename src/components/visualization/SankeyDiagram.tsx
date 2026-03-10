@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { formatMass } from '../../utils/formatters';
-import { useTheme } from '../../hooks/useTheme';
 
 interface SankeyDiagramProps {
   components: {
@@ -24,7 +23,7 @@ interface SankeyDiagramProps {
   totalWeight: number;
 }
 
-const FLOW_COLORS = {
+const C = {
   primary: '#3B82F6',
   secondary: '#6B7280',
   product: '#F59E0B',
@@ -34,10 +33,6 @@ const FLOW_COLORS = {
 } as const;
 
 export function SankeyDiagram({ components, totalWeight }: SankeyDiagramProps) {
-  const { theme } = useTheme();
-  const dark = theme === 'dark';
-  const textFill = dark ? '#fff' : '#1F2937';
-
   const flows = useMemo(() => {
     let totalPrimary = 0;
     let totalSecondary = 0;
@@ -63,46 +58,63 @@ export function SankeyDiagram({ components, totalWeight }: SankeyDiagramProps) {
 
   if (components.length === 0 || totalWeight === 0) {
     return (
-      <div className={`flex h-[250px] items-center justify-center text-sm ${dark ? 'text-gray-500' : 'text-gray-400'}`}>
+      <div className="flex h-32 items-center justify-center rounded-xl border border-dashed border-gray-200 text-xs text-gray-400">
         Add components to view mass flow
       </div>
     );
   }
 
   return (
-    <div>
-      <h3 className={`mb-2 text-sm font-medium ${dark ? 'text-white' : 'text-gray-900'}`}>Mass Flow</h3>
-      <svg viewBox="0 0 520 210" className="w-full" style={{ height: 250 }}>
-        <path d="M 100,42 C 147,42 148,75 195,75" fill="none" stroke={FLOW_COLORS.primary} strokeWidth={3} strokeOpacity={0.5} strokeLinecap="round" />
-        <path d="M 100,147 C 147,147 148,120 195,120" fill="none" stroke={FLOW_COLORS.secondary} strokeWidth={3} strokeOpacity={0.5} strokeLinecap="round" />
-        <path d="M 305,75 C 352,75 353,30 400,30" fill="none" stroke={FLOW_COLORS.recycled} strokeWidth={3} strokeOpacity={0.5} strokeLinecap="round" />
-        <path d="M 305,97 C 352,97 353,105 400,105" fill="none" stroke={FLOW_COLORS.cascaded} strokeWidth={3} strokeOpacity={0.5} strokeLinecap="round" />
-        <path d="M 305,120 C 352,120 353,180 400,180" fill="none" stroke={FLOW_COLORS.loss} strokeWidth={3} strokeOpacity={0.5} strokeLinecap="round" />
+    <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+      <div className="px-4 py-2.5 border-b border-gray-100">
+        <h3 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+          Mass Flow
+        </h3>
+      </div>
+      <div className="p-3">
+        <svg viewBox="0 0 480 190" className="w-full" style={{ height: 210 }}>
+          <defs>
+            {Object.entries(C).map(([key, color]) => (
+              <linearGradient key={key} id={`grad-${key}`} x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor={color} stopOpacity={0.3} />
+                <stop offset="100%" stopColor={color} stopOpacity={0.08} />
+              </linearGradient>
+            ))}
+          </defs>
 
-        <rect x={0} y={17} width={100} height={50} rx={4} fill={FLOW_COLORS.primary} fillOpacity={0.15} stroke={FLOW_COLORS.primary} strokeWidth={1} />
-        <text x={50} y={36} textAnchor="middle" fill={textFill} fontSize={10} fontWeight={500}>Primary Input</text>
-        <text x={50} y={54} textAnchor="middle" fill={FLOW_COLORS.primary} fontSize={10} fontFamily="monospace">{formatMass(flows.totalPrimary)}</text>
+          <path d="M 88,38 C 130,38 140,68 180,68" fill="none" stroke={C.primary} strokeWidth={2.5} strokeOpacity={0.4} />
+          <path d="M 88,132 C 130,132 140,108 180,108" fill="none" stroke={C.secondary} strokeWidth={2.5} strokeOpacity={0.4} />
+          <path d="M 280,68 C 320,68 330,28 368,28" fill="none" stroke={C.recycled} strokeWidth={2.5} strokeOpacity={0.4} />
+          <path d="M 280,88 C 320,88 330,95 368,95" fill="none" stroke={C.cascaded} strokeWidth={2.5} strokeOpacity={0.4} />
+          <path d="M 280,108 C 320,108 330,162 368,162" fill="none" stroke={C.loss} strokeWidth={2.5} strokeOpacity={0.4} />
 
-        <rect x={0} y={122} width={100} height={50} rx={4} fill={FLOW_COLORS.secondary} fillOpacity={0.15} stroke={FLOW_COLORS.secondary} strokeWidth={1} />
-        <text x={50} y={141} textAnchor="middle" fill={textFill} fontSize={10} fontWeight={500}>Secondary Input</text>
-        <text x={50} y={159} textAnchor="middle" fill={FLOW_COLORS.secondary} fontSize={10} fontFamily="monospace">{formatMass(flows.totalSecondary)}</text>
-
-        <rect x={195} y={45} width={110} height={100} rx={4} fill={FLOW_COLORS.product} fillOpacity={0.15} stroke={FLOW_COLORS.product} strokeWidth={1} />
-        <text x={250} y={88} textAnchor="middle" fill={textFill} fontSize={12} fontWeight={600}>Product</text>
-        <text x={250} y={108} textAnchor="middle" fill={FLOW_COLORS.product} fontSize={11} fontFamily="monospace">{formatMass(totalWeight)}</text>
-
-        <rect x={400} y={5} width={120} height={50} rx={4} fill={FLOW_COLORS.recycled} fillOpacity={0.15} stroke={FLOW_COLORS.recycled} strokeWidth={1} />
-        <text x={460} y={24} textAnchor="middle" fill={textFill} fontSize={10} fontWeight={500}>Recycled</text>
-        <text x={460} y={42} textAnchor="middle" fill={FLOW_COLORS.recycled} fontSize={10} fontFamily="monospace">{formatMass(flows.totalRecycled)}</text>
-
-        <rect x={400} y={80} width={120} height={50} rx={4} fill={FLOW_COLORS.cascaded} fillOpacity={0.15} stroke={FLOW_COLORS.cascaded} strokeWidth={1} />
-        <text x={460} y={99} textAnchor="middle" fill={textFill} fontSize={10} fontWeight={500}>Cascaded</text>
-        <text x={460} y={117} textAnchor="middle" fill={FLOW_COLORS.cascaded} fontSize={10} fontFamily="monospace">{formatMass(flows.totalCascaded)}</text>
-
-        <rect x={400} y={155} width={120} height={50} rx={4} fill={FLOW_COLORS.loss} fillOpacity={0.15} stroke={FLOW_COLORS.loss} strokeWidth={1} />
-        <text x={460} y={174} textAnchor="middle" fill={textFill} fontSize={10} fontWeight={500}>Loss</text>
-        <text x={460} y={192} textAnchor="middle" fill={FLOW_COLORS.loss} fontSize={10} fontFamily="monospace">{formatMass(flows.totalLoss)}</text>
-      </svg>
+          <Node x={0} y={14} w={88} h={48} color={C.primary} label="Primary" value={formatMass(flows.totalPrimary)} />
+          <Node x={0} y={108} w={88} h={48} color={C.secondary} label="Secondary" value={formatMass(flows.totalSecondary)} />
+          <Node x={180} y={42} w={100} h={90} color={C.product} label="Product" value={formatMass(totalWeight)} large />
+          <Node x={368} y={4} w={112} h={48} color={C.recycled} label="Recycled" value={formatMass(flows.totalRecycled)} />
+          <Node x={368} y={71} w={112} h={48} color={C.cascaded} label="Cascaded" value={formatMass(flows.totalCascaded)} />
+          <Node x={368} y={138} w={112} h={48} color={C.loss} label="Loss" value={formatMass(flows.totalLoss)} />
+        </svg>
+      </div>
     </div>
+  );
+}
+
+function Node({
+  x, y, w, h, color, label, value, large,
+}: {
+  x: number; y: number; w: number; h: number; color: string; label: string; value: string; large?: boolean;
+}) {
+  const cx = x + w / 2;
+  return (
+    <g>
+      <rect x={x} y={y} width={w} height={h} rx={6} fill={color} fillOpacity={0.08} stroke={color} strokeWidth={1} strokeOpacity={0.3} />
+      <text x={cx} y={y + (large ? h * 0.42 : h * 0.44)} textAnchor="middle" fill="#374151" fontSize={large ? 11 : 9.5} fontWeight={large ? 700 : 500}>
+        {label}
+      </text>
+      <text x={cx} y={y + (large ? h * 0.66 : h * 0.76)} textAnchor="middle" fill={color} fontSize={large ? 10.5 : 9} fontFamily="ui-monospace, monospace" fontWeight={600}>
+        {value}
+      </text>
+    </g>
   );
 }

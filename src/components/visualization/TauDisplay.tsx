@@ -1,5 +1,4 @@
 import { formatTau } from '../../utils/formatters';
-import { useTheme } from '../../hooks/useTheme';
 
 interface TauDisplayProps {
   totalTau: number;
@@ -7,16 +6,17 @@ interface TauDisplayProps {
 }
 
 export function TauDisplay({ totalTau, variantName }: TauDisplayProps) {
-  const { theme } = useTheme();
-  const dark = theme === 'dark';
-
   return (
-    <div className="px-3 py-2">
-      <p className={`text-xs ${dark ? 'text-gray-400' : 'text-gray-500'}`}>τ total</p>
-      <p className={`truncate text-sm ${dark ? 'text-gray-300' : 'text-gray-600'}`}>{variantName}</p>
-      <p className={`mt-1 font-mono text-2xl font-bold tracking-tight tabular-nums ${dark ? 'text-white' : 'text-gray-900'}`}>
+    <div className="rounded-xl bg-gradient-to-br from-gray-900 to-gray-800 px-5 py-4 text-white shadow-sm">
+      <div className="flex items-baseline justify-between gap-2">
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+          τ total
+        </p>
+      </div>
+      <p className="mt-2 font-mono text-[1.65rem] font-extrabold leading-none tracking-tight tabular-nums">
         {totalTau === 0 ? '—' : formatTau(totalTau)}
       </p>
+      <p className="mt-1.5 truncate text-xs text-gray-400">{variantName}</p>
     </div>
   );
 }

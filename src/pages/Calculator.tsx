@@ -221,18 +221,29 @@ export function Calculator() {
       }
       content={renderActiveSection()}
       sidebar={
-        <div className="flex flex-col gap-6 p-4">
+        <div className="flex flex-col gap-4 p-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+              Results
+            </h2>
+            <button
+              onClick={() => setActivePage('overview')}
+              className="text-[10px] font-medium text-amber-600 hover:text-amber-700 transition-colors"
+            >
+              Expand to Overview →
+            </button>
+          </div>
           {activeVariant && activeResult && (
             <>
               <TauDisplay
                 totalTau={activeResult.totalTau}
                 variantName={activeVariant.name}
               />
+              <BreakdownLegend breakdown={activeResult.breakdown} />
               <SankeyDiagram
                 components={activeVariant.components}
                 totalWeight={activeVariant.productInfo.totalWeight}
               />
-              <BreakdownLegend breakdown={activeResult.breakdown} />
             </>
           )}
           <ResultsChart

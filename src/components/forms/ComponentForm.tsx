@@ -124,14 +124,16 @@ export function ComponentForm({
             options={materialOptions}
           />
 
-          <NumberInput
-            label="Mass per unit"
-            value={component.mass}
-            onChange={(mass) => update({ mass })}
-            unit="kg"
-            min={0}
-            step={0.1}
-          />
+          <div className="py-1.5">
+            <label className="block text-sm text-gray-700 mb-1">Mass per unit</label>
+            <div className="flex items-center gap-2">
+              <div className="flex-1 px-3 py-1.5 text-sm font-mono tabular-nums text-gray-900 bg-gray-50 border border-gray-200 rounded">
+                {component.mass.toLocaleString('en-US', { minimumFractionDigits: 1 })}
+              </div>
+              <span className="text-xs text-gray-400">kg</span>
+            </div>
+            <p className="mt-0.5 text-[10px] text-gray-400">Set in Product Info</p>
+          </div>
         </div>
 
         {/* Primary / Secondary split */}

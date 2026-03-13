@@ -20,7 +20,7 @@ interface SankeyDiagramProps {
       lossRate: number;
     };
   }[];
-  totalWeight: number;
+  totalMass: number;
 }
 
 const C = {
@@ -32,7 +32,7 @@ const C = {
   loss: '#EF4444',
 } as const;
 
-export function SankeyDiagram({ components, totalWeight }: SankeyDiagramProps) {
+export function SankeyDiagram({ components, totalMass }: SankeyDiagramProps) {
   const flows = useMemo(() => {
     let totalPrimary = 0;
     let totalSecondary = 0;
@@ -56,7 +56,7 @@ export function SankeyDiagram({ components, totalWeight }: SankeyDiagramProps) {
     return { totalPrimary, totalSecondary, totalRecycled, totalCascaded, totalLoss };
   }, [components]);
 
-  if (components.length === 0 || totalWeight === 0) {
+  if (components.length === 0 || totalMass === 0) {
     return (
       <div className="flex h-32 items-center justify-center rounded-xl border border-dashed border-gray-200 text-xs text-gray-400">
         Add components to view mass flow
@@ -90,7 +90,7 @@ export function SankeyDiagram({ components, totalWeight }: SankeyDiagramProps) {
 
           <Node x={0} y={14} w={88} h={48} color={C.primary} label="Primary" value={formatMass(flows.totalPrimary)} />
           <Node x={0} y={108} w={88} h={48} color={C.secondary} label="Secondary" value={formatMass(flows.totalSecondary)} />
-          <Node x={180} y={42} w={100} h={90} color={C.product} label="Product" value={formatMass(totalWeight)} large />
+          <Node x={180} y={42} w={100} h={90} color={C.product} label="Product" value={formatMass(totalMass)} large />
           <Node x={368} y={4} w={112} h={48} color={C.recycled} label="Recycled" value={formatMass(flows.totalRecycled)} />
           <Node x={368} y={71} w={112} h={48} color={C.cascaded} label="Cascaded" value={formatMass(flows.totalCascaded)} />
           <Node x={368} y={138} w={112} h={48} color={C.loss} label="Loss" value={formatMass(flows.totalLoss)} />

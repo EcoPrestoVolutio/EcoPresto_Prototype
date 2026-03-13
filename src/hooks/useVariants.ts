@@ -10,7 +10,7 @@ function createEmptyVariant(index: number): Variant {
   return {
     id,
     name: `Variant ${index}`,
-    productInfo: { name: '', category: 'Infrastructure', variantName: `Variant ${index}`, sleeperType: 'concrete', totalWeight: 0, componentCount: 1 },
+    productInfo: { name: '', category: 'Infrastructure', variantName: `Variant ${index}`, sleeperType: 'concrete', totalMass: 0, componentCount: 1 },
     components: [{
       id: `${id}-comp-1`,
       name: 'Component 1',
@@ -58,10 +58,14 @@ export function useVariants(initialProduct: Product) {
   }, [updateActiveVariant]);
 
   const updateComponent = useCallback((componentId: string, updates: Partial<ComponentItem>) => {
-    updateActiveVariant(v => ({
-      ...v,
-      components: v.components.map(c => c.id === componentId ? { ...c, ...updates } : c),
-    }));
+    updateActiveVariant(v => {
+      const components = v.components.map(c => c.id === componentId ? { ...c, ...updates } : c);
+      return {
+        ...v,
+        components,
+        productInfo: { ...v.productInfo, totalMass: components.reduce((s, c) => s + c.mass, 0) },
+      };
+    });
   }, [updateActiveVariant]);
 
   const updateManufacturing = useCallback((updates: Partial<Manufacturing>) => {
@@ -166,7 +170,7 @@ export function useVariants(initialProduct: Product) {
       productInfo: {
         ...v.productInfo,
         componentCount: components.length,
-        totalWeight: components.reduce((sum, c) => sum + c.mass, 0),
+        totalMass: components.reduce((sum, c) => sum + c.mass, 0),
       },
     }));
   }, [updateVariant]);

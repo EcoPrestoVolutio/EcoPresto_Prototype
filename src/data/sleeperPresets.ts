@@ -13,7 +13,7 @@ export const defaultProduct: Product = {
         category: 'Infrastructure',
         variantName: 'Concrete Basic 40y',
         sleeperType: 'concrete',
-        totalWeight: 250,
+        totalMass: 250,
         componentCount: 4,
       },
       components: [
@@ -62,7 +62,7 @@ export const defaultProduct: Product = {
         category: 'Infrastructure',
         variantName: 'Wood Basic 25y',
         sleeperType: 'wood',
-        totalWeight: 102,
+        totalMass: 102,
         componentCount: 3,
       },
       components: [
@@ -105,7 +105,7 @@ export const defaultProduct: Product = {
         category: 'Infrastructure',
         variantName: 'SICUT Basic 20y',
         sleeperType: 'sicut',
-        totalWeight: 85,
+        totalMass: 85,
         componentCount: 2,
       },
       components: [

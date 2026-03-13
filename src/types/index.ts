@@ -32,7 +32,7 @@ export interface ProductInfo {
   category: string;
   variantName: string;
   sleeperType: SleeperType;
-  totalWeight: number;
+  totalMass: number;
   componentCount: number;
 }
 

@@ -247,7 +247,7 @@ function StackedBarChart({
                   fontSize={8}
                   fill="#9CA3AF"
                 >
-                  {d.variant.usePhase.lifetime}y · {formatNumber(d.variant.productInfo.totalWeight, 0)} kg
+                  {d.variant.usePhase.lifetime}y · {formatNumber(d.variant.productInfo.totalMass, 0)} kg
                 </text>
 
                 {/* Tau value above bar */}
@@ -541,7 +541,7 @@ export function OverviewPage({ variants, results }: OverviewPageProps) {
               )}
               <h3 className="truncate text-sm font-semibold text-gray-900">{d.variant.name}</h3>
               <p className="mt-0.5 text-[10px] text-gray-500">
-                {d.sleeper?.label ?? d.variant.productInfo.sleeperType} · {d.variant.usePhase.lifetime}y · {formatNumber(d.variant.productInfo.totalWeight, 0)} kg
+                {d.sleeper?.label ?? d.variant.productInfo.sleeperType} · {d.variant.usePhase.lifetime}y · {formatNumber(d.variant.productInfo.totalMass, 0)} kg
               </p>
               <p className="mt-2.5 text-base font-bold tracking-tight text-gray-900">
                 <TauMono tau={d.result.totalTau} />
@@ -624,7 +624,7 @@ export function OverviewPage({ variants, results }: OverviewPageProps) {
               <TauRow label="Transport τ" data={data} extract={d => d.agg.Transport} />
               <tr className="h-px"><td colSpan={data.length + 1} className="border-b border-gray-200" /></tr>
               <MetricRow label="Lifetime" data={data} extract={d => `${d.variant.usePhase.lifetime} yr`} />
-              <MetricRow label="Total Mass" data={data} extract={d => `${formatNumber(d.variant.productInfo.totalWeight)} kg`} />
+              <MetricRow label="Total Mass" data={data} extract={d => `${formatNumber(d.variant.productInfo.totalMass)} kg`} />
               <MetricRow label="Components" data={data} extract={d => String(d.variant.components.length)} />
               <MetricRow label="Sleeper Type" data={data} extract={d => d.sleeper?.label ?? '—'} />
             </tbody>

@@ -95,10 +95,12 @@ export function Calculator() {
         <ProductInfoForm
           productInfo={activeVariant.productInfo}
           lifetime={activeVariant.usePhase.lifetime}
+          components={activeVariant.components}
           onUpdate={updateProductInfo}
           onLifetimeChange={(lifetime) => updateUsePhase({ lifetime })}
           onComponentCountChange={setComponentCount}
           onSleeperTypeChange={handleSleeperTypeChange}
+          onUpdateComponent={updateComponent}
         />
       );
     }
@@ -242,7 +244,7 @@ export function Calculator() {
               <BreakdownLegend breakdown={activeResult.breakdown} />
               <SankeyDiagram
                 components={activeVariant.components}
-                totalWeight={activeVariant.productInfo.totalWeight}
+                totalMass={activeVariant.productInfo.totalMass}
               />
             </>
           )}

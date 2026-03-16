@@ -112,7 +112,7 @@ export function SectionNav({ sections, activeSection, onSelect }: SectionNavProp
       {lifecycleSections.length > 0 && (
         <>
           <div className={dividerClass} />
-          <div className={groupHeaderClass}>Lifecycle</div>
+          <div className={groupHeaderClass}>Energy & Transport</div>
           {lifecycleSections.map(renderItem)}
         </>
       )}

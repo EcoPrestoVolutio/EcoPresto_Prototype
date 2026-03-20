@@ -8,7 +8,6 @@ export interface SleeperTypeDefinition {
   defaultComponents: Omit<ComponentItem, 'id'>[];
 }
 
-const DEFAULT_CHAIN = { collectionRate: 1.0, recyclingRate: 0, cascadingRate: 0, lossRate: 1 };
 
 export const sleeperTypes: SleeperTypeDefinition[] = [
   {

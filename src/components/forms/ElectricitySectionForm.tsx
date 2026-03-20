@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { Zap, Info } from 'lucide-react';
-import type { ComponentItem, EnergyMix } from '../../types';
+import { Zap } from 'lucide-react';
+import type { ComponentItem } from '../../types';
 import { useMaterialsEnergy } from '../../hooks/useMaterialsEnergy';
 import { computeHeatBreakdown, computeElectricityBreakdown } from '../../utils/energyBreakdown';
 import { calculateMixTau } from '../../utils/calculate';
